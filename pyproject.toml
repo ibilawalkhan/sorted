@@ -1,0 +1,46 @@
+# pyproject.toml — single source of truth for project metadata and tooling.
+# One file configures the build metadata, ruff (lint + format), mypy (types),
+# and pytest. This is the modern Python standard (PEP 518/621).
+
+[project]
+name = "sorted"
+version = "0.1.0"
+description = "Serverless receipt & expense tracker (Textract -> Step Functions -> DynamoDB)."
+requires-python = ">=3.12"
+# Runtime dependencies are pinned in requirements.txt (Lambda-friendly install),
+# kept separate from project metadata so the deployable dep list stays explicit.
+
+[tool.ruff]
+# Match the Lambda runtime so ruff flags syntax/APIs unavailable in 3.12.
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# A pragmatic, interview-defensible rule set (not the whole kitchen sink):
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes: undefined names, unused imports
+    "I",   # isort: import ordering
+    "N",   # pep8-naming
+    "UP",  # pyupgrade: prefer modern 3.12 syntax
+    "B",   # flake8-bugbear: likely bugs / footguns
+    "SIM", # flake8-simplify
+    "C4",  # flake8-comprehensions
+    "RUF", # ruff-specific rules
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true            # the strictest preset: no implicit Any, typed defs required
+mypy_path = "src"        # resolve `shared`, `api`, ... as top-level imports (see pytest note)
+files = ["src"]          # per CLAUDE.md, type-check src/ only
+
+[tool.pytest.ini_options]
+# `pytest` with no args runs ONLY unit tests: fast, no AWS account needed.
+# Integration tests hit a deployed stack and are run explicitly (`pytest tests/integration`).
+testpaths = ["tests/unit"]
+# Put src/ on the import path so tests do `from shared.repo import ...`, exactly
+# how code is imported inside Lambda (the shared layer exposes `shared/` at the root).
+pythonpath = ["src"]
+addopts = "-ra --strict-markers"

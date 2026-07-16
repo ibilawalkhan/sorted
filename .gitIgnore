@@ -1,1 +1,28 @@
-Claude.md
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# --- AWS SAM (generated build/deploy artefacts) ---
+.aws-sam/
+samconfig.local.toml
+env.local.json
+
+# --- Node (web/ frontend) ---
+web/node_modules/
+web/dist/
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+CLAUDE.md

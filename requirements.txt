@@ -1,0 +1,6 @@
+# Runtime dependencies — installed into the Lambda "shared" layer.
+# boto3/botocore are provided by the Lambda runtime itself, so they are NOT
+# listed here (keeps the deployed layer small); they live in requirements-dev.txt
+# for local code + tests.
+pydantic>=2.7,<3
+aws-lambda-powertools>=3,<4
